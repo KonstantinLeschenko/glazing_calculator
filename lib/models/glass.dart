@@ -55,7 +55,7 @@ class GlassCatalog {
     GlassType(
       id: '4',
       label: '4',
-      description: '4 мм — флоат (обычное)',
+      description: '4 мм',
       thickness: 0.004,
       emissivity: 0.89,
       lambda: 1.0,
@@ -66,7 +66,7 @@ class GlassCatalog {
     GlassType(
       id: '6',
       label: '6',
-      description: '6 мм — флоат (обычное)',
+      description: '6 мм',
       thickness: 0.006,
       emissivity: 0.89,
       lambda: 1.0,
@@ -79,7 +79,7 @@ class GlassCatalog {
     GlassType(
       id: '4i',
       label: '4i',
-      description: '4i — Low-E мягкое покрытие (ε = 0.04)',
+      description: '4i',
       thickness: 0.004,
       emissivity: 0.04,
       lambda: 1.0,
@@ -90,7 +90,7 @@ class GlassCatalog {
     GlassType(
       id: '6i',
       label: '6i',
-      description: '6i — Low-E мягкое покрытие (ε = 0.04)',
+      description: '6i',
       thickness: 0.006,
       emissivity: 0.04,
       lambda: 1.0,
@@ -103,7 +103,7 @@ class GlassCatalog {
     GlassType(
       id: '4Solar',
       label: '4Solar',
-      description: '4 Solar — солнцезащитное покрытие (ε = 0.15)',
+      description: '4 Solar',
       thickness: 0.004,
       emissivity: 0.15,
       lambda: 1.0,
@@ -114,7 +114,7 @@ class GlassCatalog {
     GlassType(
       id: '6Solar',
       label: '6Solar',
-      description: '6 Solar — солнцезащитное покрытие (ε = 0.15)',
+      description: '6 Solar',
       thickness: 0.006,
       emissivity: 0.15,
       lambda: 1.0,
@@ -127,7 +127,7 @@ class GlassCatalog {
     GlassType(
       id: '6bronze',
       label: '6бронза',
-      description: '6 мм — бронзовое тонированное',
+      description: '6 мм бронза',
       thickness: 0.006,
       emissivity: 0.89,
       lambda: 1.0,
@@ -138,7 +138,7 @@ class GlassCatalog {
     GlassType(
       id: '6grey',
       label: '6серое',
-      description: '6 мм — серое тонированное',
+      description: '6 мм серое',
       thickness: 0.006,
       emissivity: 0.89,
       lambda: 1.0,
@@ -151,7 +151,7 @@ class GlassCatalog {
     GlassType(
       id: '3.3.1',
       label: '3.3.1',
-      description: '3.3.1 — триплекс (≈ 6.8 мм)',
+      description: '3.3.1',
       thickness: 0.0068,
       emissivity: 0.89,
       lambda: 0.95,
@@ -162,7 +162,7 @@ class GlassCatalog {
     GlassType(
       id: '3.3.1i',
       label: '3.3.1i',
-      description: '3.3.1i — триплекс с Low-E (ε = 0.04)',
+      description: '3.3.1i',
       thickness: 0.0068,
       emissivity: 0.04,
       lambda: 0.95,
@@ -173,7 +173,7 @@ class GlassCatalog {
     GlassType(
       id: '3.3.1Solar',
       label: '3.3.1Solar',
-      description: '3.3.1 Solar — триплекс с солнцезащитой (ε = 0.15)',
+      description: '3.3.1 Solar',
       thickness: 0.0068,
       emissivity: 0.15,
       lambda: 0.95,
@@ -184,7 +184,7 @@ class GlassCatalog {
     GlassType(
       id: '4.4.1',
       label: '4.4.1',
-      description: '4.4.1 — триплекс (≈ 9.5 мм)',
+      description: '4.4.1',
       thickness: 0.0095,
       emissivity: 0.89,
       lambda: 0.95,
@@ -195,7 +195,7 @@ class GlassCatalog {
     GlassType(
       id: '4.4.1i',
       label: '4.4.1i',
-      description: '4.4.1i — триплекс с Low-E (ε = 0.04)',
+      description: '4.4.1i',
       thickness: 0.0095,
       emissivity: 0.04,
       lambda: 0.95,
