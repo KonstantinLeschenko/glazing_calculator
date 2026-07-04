@@ -120,6 +120,12 @@ class SolarResult {
   /// Солнечный фактор окна gw (null если расчёт окна не запрошен)
   final double? gw;
 
+  /// Shading Coefficient стеклопакета SC = ggl / 0.87
+  final double sc;
+
+  /// Shading Coefficient окна с рамой SCw = gw / 0.87 (null если рама не учтена)
+  final double? scWindow;
+
   const SolarResult({
     required this.glazing,
     this.gf,
@@ -127,6 +133,8 @@ class SolarResult {
     this.aFrame,
     this.glazingFraction,
     this.gw,
+    required this.sc,
+    this.scWindow,
   });
 }
 
@@ -146,7 +154,8 @@ class SolarCalculator {
   /// [unit] — конфигурация стеклопакета.
   SolarResult calculateGlazing(GlazingUnit unit) {
     final glazingResult = _calcGlazingG(unit);
-    return SolarResult(glazing: glazingResult);
+    final sc = glazingResult.ggl / 0.87;
+    return SolarResult(glazing: glazingResult, sc: sc);
   }
 
   /// Рассчитать g стеклопакета + g окна с рамой.
@@ -178,6 +187,9 @@ class SolarCalculator {
     // gw = ggl × Ff + gf × (1 − Ff)
     final gw = glazingResult.ggl * ff + gf * (1.0 - ff);
 
+    final sc = glazingResult.ggl / 0.87;
+    final scWindow = gw / 0.87;
+
     return SolarResult(
       glazing: glazingResult,
       gf: gf,
@@ -185,6 +197,8 @@ class SolarCalculator {
       aFrame: af,
       glazingFraction: ff,
       gw: gw,
+      sc: sc,
+      scWindow: scWindow,
     );
   }
 

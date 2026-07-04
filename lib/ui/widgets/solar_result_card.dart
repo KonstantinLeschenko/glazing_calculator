@@ -47,7 +47,7 @@ class SolarResultCard extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // ── Главные показатели: ggl и τe ──────────────────────────────
+            // ── Главные показатели: ggl, SC и τe ──────────────────────────
             Row(
               children: [
                 Expanded(
@@ -62,21 +62,21 @@ class SolarResultCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _MainMetric(
-                    label: 'τe',
-                    value: g.tauE.toStringAsFixed(3),
-                    unit: 'прямое\nпропускание',
-                    color: cs.onSurface,
-                    tooltip: 'Коэффициент прямого пропускания\nсолнечного излучения стеклопакетом',
+                    label: 'SC',
+                    value: result.sc.toStringAsFixed(2),
+                    unit: 'Shading\nCoefficient',
+                    color: _colorForG(cs, result.sc),
+                    tooltip: 'Shading Coefficient стеклопакета\nSC = ggl / 0.87',
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _MainMetric(
-                    label: 'qi',
-                    value: g.qi.toStringAsFixed(3),
-                    unit: 'вторичная\nтеплоотдача',
+                    label: 'τe',
+                    value: g.tauE.toStringAsFixed(3),
+                    unit: 'прямое\nпропускание',
                     color: cs.onSurface,
-                    tooltip: 'Вторичный коэффициент теплопередачи\nвнутрь помещения',
+                    tooltip: 'Коэффициент прямого пропускания\nсолнечного излучения стеклопакетом',
                   ),
                 ),
               ],
@@ -107,6 +107,16 @@ class SolarResultCard extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _MainMetric(
+                      label: 'SCw',
+                      value: result.scWindow!.toStringAsFixed(2),
+                      unit: 'Shading\nCoefficient',
+                      color: _colorForG(cs, result.scWindow!),
+                      tooltip: 'Shading Coefficient окна с рамой\nSCw = gw / 0.87',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _MainMetric(
                       label: 'gf',
                       value: result.gf!.toStringAsFixed(3),
                       unit: 'рама',
@@ -114,7 +124,11 @@ class SolarResultCard extends StatelessWidget {
                       tooltip: 'Солнечный фактор рамы',
                     ),
                   ),
-                  const SizedBox(width: 12),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
                   Expanded(
                     child: _MainMetric(
                       label: 'Ff',
@@ -124,6 +138,20 @@ class SolarResultCard extends StatelessWidget {
                       color: cs.onSurface,
                       tooltip: 'Доля площади остекления в общей\nплощади окна',
                     ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _MainMetric(
+                      label: 'qi',
+                      value: g.qi.toStringAsFixed(3),
+                      unit: 'вторичная\nтеплоотдача',
+                      color: cs.onSurface,
+                      tooltip: 'Вторичный коэффициент теплопередачи\nвнутрь помещения',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: SizedBox.shrink(),
                   ),
                 ],
               ),
