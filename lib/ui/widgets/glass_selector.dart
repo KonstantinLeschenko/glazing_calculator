@@ -6,12 +6,14 @@ class GlassSelector extends StatelessWidget {
   final String label;
   final GlassType selected;
   final ValueChanged<GlassType> onChanged;
+  final bool verticalChips;
 
   const GlassSelector({
     super.key,
     required this.label,
     required this.selected,
     required this.onChanged,
+    this.verticalChips = false,
   });
 
   @override
@@ -46,15 +48,27 @@ class GlassSelector extends StatelessWidget {
         ),
         // Краткая характеристика выбранного стекла
         const SizedBox(height: 4),
-        Row(
-          children: [
-            _chip(context, 'd = ${(selected.thickness * 1000).toStringAsFixed(1)} мм'),
-            const SizedBox(width: 6),
-            _chip(context, 'ε = ${selected.emissivity}'),
-            const SizedBox(width: 6),
-            _chip(context, 'λ = ${selected.lambda} Вт/(м·К)'),
-          ],
-        ),
+        if (verticalChips)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _chip(context, 'd = ${(selected.thickness * 1000).toStringAsFixed(1)} мм'),
+              const SizedBox(height: 4),
+              _chip(context, 'ε = ${selected.emissivity}'),
+              const SizedBox(height: 4),
+              _chip(context, 'λ = ${selected.lambda} Вт/(м·К)'),
+            ],
+          )
+        else
+          Row(
+            children: [
+              _chip(context, 'd = ${(selected.thickness * 1000).toStringAsFixed(1)} мм'),
+              const SizedBox(width: 6),
+              _chip(context, 'ε = ${selected.emissivity}'),
+              const SizedBox(width: 6),
+              _chip(context, 'λ = ${selected.lambda} Вт/(м·К)'),
+            ],
+          ),
       ],
     );
   }

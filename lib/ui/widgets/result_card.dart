@@ -128,7 +128,7 @@ class ResultCard extends StatelessWidget {
   }
 
   String _ratingText(double r0) {
-    if (r0 >= 0.80) return 'Отлично';
+    if (r0 >= 0.90) return 'Отлично';
     if (r0 >= 0.60) return 'Хорошо';
     if (r0 >= 0.45) return 'Удовл.';
     return 'Низкое';

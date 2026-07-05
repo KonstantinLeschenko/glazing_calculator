@@ -54,7 +54,7 @@ class SolarResultCard extends StatelessWidget {
                   child: _MainMetric(
                     label: 'ggl',
                     value: g.ggl.toStringAsFixed(2),
-                    unit: 'солнечный фактор\nстеклопакета',
+                    unit: 'солнечный фактор G\nстеклопакета',
                     color: _colorForG(cs, g.ggl),
                     tooltip: 'Суммарный коэффициент солнечного\nтеплопоступления стеклопакета (EN 410)',
                   ),

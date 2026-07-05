@@ -55,7 +55,7 @@ class GlassCatalog {
     GlassType(
       id: '4',
       label: '4',
-      description: '4 мм',
+      description: '4',
       thickness: 0.004,
       emissivity: 0.89,
       lambda: 1.0,
@@ -66,7 +66,7 @@ class GlassCatalog {
     GlassType(
       id: '6',
       label: '6',
-      description: '6 мм',
+      description: '6',
       thickness: 0.006,
       emissivity: 0.89,
       lambda: 1.0,
@@ -103,7 +103,7 @@ class GlassCatalog {
     GlassType(
       id: '4Solar',
       label: '4Solar',
-      description: '4 Solar',
+      description: '4_Solar',
       thickness: 0.004,
       emissivity: 0.15,
       lambda: 1.0,
@@ -114,7 +114,7 @@ class GlassCatalog {
     GlassType(
       id: '6Solar',
       label: '6Solar',
-      description: '6 Solar',
+      description: '6_Solar',
       thickness: 0.006,
       emissivity: 0.15,
       lambda: 1.0,
@@ -125,9 +125,31 @@ class GlassCatalog {
 
     // ── Тонированные ────────────────────────────────────────────────────────
     GlassType(
+      id: '4bronze',
+      label: '4bronze',
+      description: '4_Bronze',
+      thickness: 0.004,
+      emissivity: 0.89,
+      lambda: 1.0,
+      tauE: 0.424, // оценка: расчёт по закону Бугера–Ламберта из 6bronze
+      rhoEf: 0.065,
+      rhoEb: 0.065,
+    ),
+    GlassType(
+      id: '4grey',
+      label: '4grey',
+      description: '4_Grey',
+      thickness: 0.004,
+      emissivity: 0.89,
+      lambda: 1.0,
+      tauE: 0.380, // оценка: расчёт по закону Бугера–Ламберта из 6grey
+      rhoEf: 0.062,
+      rhoEb: 0.062,
+    ),
+    GlassType(
       id: '6bronze',
-      label: '6бронза',
-      description: '6 мм бронза',
+      label: '6bronze',
+      description: '6_Bronze',
       thickness: 0.006,
       emissivity: 0.89,
       lambda: 1.0,
@@ -137,8 +159,8 @@ class GlassCatalog {
     ),
     GlassType(
       id: '6grey',
-      label: '6серое',
-      description: '6 мм серое',
+      label: '6grey',
+      description: '6_Grey',
       thickness: 0.006,
       emissivity: 0.89,
       lambda: 1.0,
@@ -173,7 +195,7 @@ class GlassCatalog {
     GlassType(
       id: '3.3.1Solar',
       label: '3.3.1Solar',
-      description: '3.3.1 Solar',
+      description: '3.3.1_Solar',
       thickness: 0.0068,
       emissivity: 0.15,
       lambda: 0.95,

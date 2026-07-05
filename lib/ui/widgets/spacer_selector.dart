@@ -8,12 +8,14 @@ class SpacerSelector extends StatelessWidget {
   final String label;
   final SpacerConfig config;
   final ValueChanged<SpacerConfig> onChanged;
+  final bool compact;
 
   const SpacerSelector({
     super.key,
     required this.label,
     required this.config,
     required this.onChanged,
+    this.compact = false,
   });
 
   @override
@@ -41,20 +43,21 @@ class SpacerSelector extends StatelessWidget {
             ),
             const SizedBox(height: 14),
 
-            // Параметры в строку: расстояние, газ, дистанционный профиль
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Ширина дистанции
-                Expanded(
-                  child: _paramColumn(
+            // Параметры: в строку (обычный режим) или колонкой (compact)
+            if (compact)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _paramColumn(
                     context: context,
-                    label: 'Расстояние между стёклами',
+                    label: 'Расстояние',
                     child: DropdownButtonFormField<int>(
                       value: config.thicknessMm,
                       isExpanded: true,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.straighten_outlined, size: 20),
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
                       items: SpacerConfig.availableThicknesses
                           .map((mm) => DropdownMenuItem(
@@ -67,19 +70,17 @@ class SpacerSelector extends StatelessWidget {
                       },
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-
-                // Газ-наполнитель
-                Expanded(
-                  child: _paramColumn(
+                  const SizedBox(height: 8),
+                  _paramColumn(
                     context: context,
-                    label: 'Газ-наполнитель',
+                    label: 'Газ',
                     child: DropdownButtonFormField<String>(
                       value: config.gasId,
                       isExpanded: true,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.bubble_chart_outlined, size: 20),
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
                       items: GasCatalog.all
                           .map((g) => DropdownMenuItem(
@@ -92,14 +93,10 @@ class SpacerSelector extends StatelessWidget {
                       },
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-
-                // Тип дистанционного профиля
-                Expanded(
-                  child: _paramColumn(
+                  const SizedBox(height: 8),
+                  _paramColumn(
                     context: context,
-                    label: 'Дистанционный профиль',
+                    label: 'Профиль',
                     child: SegmentedButton<SpacerFrameType>(
                       segments: SpacerFrameType.values
                           .map((f) => ButtonSegment(
@@ -112,9 +109,82 @@ class SpacerSelector extends StatelessWidget {
                           onChanged(config.copyWith(frameType: s.first)),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              )
+            else
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Ширина дистанции
+                  Expanded(
+                    child: _paramColumn(
+                      context: context,
+                      label: 'Расстояние между стёклами',
+                      child: DropdownButtonFormField<int>(
+                        value: config.thicknessMm,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.straighten_outlined, size: 20),
+                        ),
+                        items: SpacerConfig.availableThicknesses
+                            .map((mm) => DropdownMenuItem(
+                                  value: mm,
+                                  child: Text('$mm мм'),
+                                ))
+                            .toList(),
+                        onChanged: (v) {
+                          if (v != null) onChanged(config.copyWith(thicknessMm: v));
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Газ-наполнитель
+                  Expanded(
+                    child: _paramColumn(
+                      context: context,
+                      label: 'Газ-наполнитель',
+                      child: DropdownButtonFormField<String>(
+                        value: config.gasId,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.bubble_chart_outlined, size: 20),
+                        ),
+                        items: GasCatalog.all
+                            .map((g) => DropdownMenuItem(
+                                  value: g.id,
+                                  child: Text(g.label),
+                                ))
+                            .toList(),
+                        onChanged: (v) {
+                          if (v != null) onChanged(config.copyWith(gasId: v));
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Тип дистанционного профиля
+                  Expanded(
+                    child: _paramColumn(
+                      context: context,
+                      label: 'Дистанционный профиль',
+                      child: SegmentedButton<SpacerFrameType>(
+                        segments: SpacerFrameType.values
+                            .map((f) => ButtonSegment(
+                                  value: f,
+                                  label: Text(f.label),
+                                ))
+                            .toList(),
+                        selected: {config.frameType},
+                        onSelectionChanged: (s) =>
+                            onChanged(config.copyWith(frameType: s.first)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),

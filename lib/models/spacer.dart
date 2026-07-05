@@ -4,8 +4,8 @@
 /// Пластиковая/теплоизолирующая рамка ("тёплый край") снижает теплопотери
 /// по периметру, но не влияет на R₀ центральной зоны стеклопакета.
 enum SpacerFrameType {
-  aluminium('alu', 'Алюминий'),
-  warm('pdn', 'Пластик');
+  aluminium('alu', 'Al'),
+  warm('pdn', 'PVC');
 
   final String id;
   final String label;

@@ -4,7 +4,6 @@ import '../models/glazing_unit.dart';
 import '../models/spacer.dart';
 import '../services/solar_calculator.dart';
 import '../services/thermal_calculator.dart';
-import 'widgets/frame_selector.dart';
 import 'widgets/result_tabs_card.dart';
 import 'widgets/spacer_selector.dart';
 import 'widgets/unit_type_selector.dart';
@@ -33,19 +32,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final _thermalCalculator = ThermalCalculator();
   final _solarCalculator = SolarCalculator();
 
-  // ── Параметры рамы и окна (для солнечного расчёта) ────────────────────────
-  FrameConfig _frameConfig = const FrameConfig(
-    frameWidthM: 0.085,
-    frameType: FrameType.whitePvc,
-  );
-  WindowDimensions _windowDimensions = const WindowDimensions(
-    widthM: 1.20,
-    heightM: 1.40,
-  );
-
-  /// Включать ли расчёт g окна с рамой
-  bool _includeFrame = false;
-
   // ── Построение GlazingUnit из текущего состояния ─────────────────────────
   GlazingUnit _buildUnit() {
     if (_unitType == GlazingUnitType.single) {
@@ -73,14 +59,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     // Теплотехнический расчёт
     final thermalResult = _thermalCalculator.calculate(unit);
 
-    // Солнечный расчёт
-    final solarResult = _includeFrame
-        ? _solarCalculator.calculateWindow(
-            unit: unit,
-            window: _windowDimensions,
-            frame: _frameConfig,
-          )
-        : _solarCalculator.calculateGlazing(unit);
+    // Солнечный расчёт (только для стеклопакета)
+    final solarResult = _solarCalculator.calculateGlazing(unit);
 
     _showResultDialog(
       title: 'Результаты расчёта',
@@ -151,13 +131,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   // ── UI ────────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.of(context).size.width > 800;
+    final isLandscape =
+        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Калькулятор стеклопакетов'),
       ),
       body: _buildScrollBody(
-        isWide: isWide,
+        isLandscape: isLandscape,
         children: [
           const _SectionLabel('Тип стеклопакета'),
           UnitTypeSelector(
@@ -168,35 +149,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           ),
           const SizedBox(height: 24),
           const _SectionLabel('Состав стеклопакета'),
-          ..._buildInputWidgets(isWide: isWide),
-          const SizedBox(height: 24),
-
-          // ── Параметры рамы (для солнечного фактора) ───────────────────────
-          const _SectionLabel('Расчёт g окна с рамой'),
-          SwitchListTile(
-            value: _includeFrame,
-            onChanged: (v) => setState(() {
-              _includeFrame = v;
-            }),
-            title: const Text('Учитывать параметры рамы'),
-            subtitle: Text(_includeFrame
-                ? 'Рассчитать ggl и gw (EN 13363-1)'
-                : 'Рассчитать только ggl стеклопакета (EN 410)'),
-            contentPadding: EdgeInsets.zero,
-          ),
-          if (_includeFrame) ...[
-            const SizedBox(height: 16),
-            FrameSelector(
-              frameConfig: _frameConfig,
-              windowDimensions: _windowDimensions,
-              onFrameChanged: (v) => setState(() {
-                _frameConfig = v;
-              }),
-              onWindowChanged: (v) => setState(() {
-                _windowDimensions = v;
-              }),
-            ),
-          ],
+          ..._buildInputWidgets(isLandscape: isLandscape),
           const SizedBox(height: 24),
 
           // ── Кнопка расчёта ────────────────────────────────────────────────
@@ -216,12 +169,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Widget _buildScrollBody({
-    required bool isWide,
+    required bool isLandscape,
     required List<Widget> children,
   }) {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: isWide ? 32 : 16,
+        horizontal: isLandscape ? 32 : 16,
         vertical: 20,
       ),
       child: Center(
@@ -237,24 +190,60 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   /// Строит список виджетов «Стекло → Камера → Стекло → …» в правильном
-  /// порядке в зависимости от типа стеклопакета.
-  List<Widget> _buildInputWidgets({required bool isWide}) {
-    const gap = SizedBox(height: 16);
+  /// порядке в зависимости от типа стеклопакета и ориентации экрана.
+  List<Widget> _buildInputWidgets({required bool isLandscape}) {
+    const gapV = SizedBox(height: 16);
+    const gapH = SizedBox(width: 16);
 
     if (_unitType == GlazingUnitType.single) {
+      if (isLandscape) {
+        return [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: GlassSelector(
+                  label: 'Стекло 1 (наружное)',
+                  selected: _glass1,
+                  onChanged: (v) => setState(() => _glass1 = v),
+                  verticalChips: true,
+                ),
+              ),
+              gapH,
+              Expanded(
+                child: SpacerSelector(
+                  label: 'Камера 1',
+                  config: _spacer1,
+                  onChanged: (v) => setState(() => _spacer1 = v),
+                  compact: true,
+                ),
+              ),
+              gapH,
+              Expanded(
+                child: GlassSelector(
+                  label: 'Стекло 2 (внутреннее)',
+                  selected: _glass2,
+                  onChanged: (v) => setState(() => _glass2 = v),
+                  verticalChips: true,
+                ),
+              ),
+            ],
+          ),
+        ];
+      }
       return [
         GlassSelector(
           label: 'Стекло 1 (наружное)',
           selected: _glass1,
           onChanged: (v) => setState(() => _glass1 = v),
         ),
-        gap,
+        gapV,
         SpacerSelector(
           label: 'Камера 1',
           config: _spacer1,
           onChanged: (v) => setState(() => _spacer1 = v),
         ),
-        gap,
+        gapV,
         GlassSelector(
           label: 'Стекло 2 (внутреннее)',
           selected: _glass2,
@@ -263,32 +252,85 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       ];
     }
 
-    // Двухкамерный стеклопакет
+    if (isLandscape) {
+      return [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: GlassSelector(
+                label: 'Стекло 1 (наружное)',
+                selected: _glass1,
+                onChanged: (v) => setState(() => _glass1 = v),
+                verticalChips: true,
+              ),
+            ),
+            gapH,
+            Expanded(
+              child: SpacerSelector(
+                label: 'Камера 1',
+                config: _spacer1,
+                onChanged: (v) => setState(() => _spacer1 = v),
+                compact: true,
+              ),
+            ),
+            gapH,
+            Expanded(
+              child: GlassSelector(
+                label: 'Стекло 2 (среднее)',
+                selected: _glass2,
+                onChanged: (v) => setState(() => _glass2 = v),
+                verticalChips: true,
+              ),
+            ),
+            gapH,
+            Expanded(
+              child: SpacerSelector(
+                label: 'Камера 2',
+                config: _spacer2,
+                onChanged: (v) => setState(() => _spacer2 = v),
+                compact: true,
+              ),
+            ),
+            gapH,
+            Expanded(
+              child: GlassSelector(
+                label: 'Стекло 3 (внутреннее)',
+                selected: _glass3,
+                onChanged: (v) => setState(() => _glass3 = v),
+                verticalChips: true,
+              ),
+            ),
+          ],
+        ),
+      ];
+    }
+
     return [
       GlassSelector(
         label: 'Стекло 1 (наружное)',
         selected: _glass1,
         onChanged: (v) => setState(() => _glass1 = v),
       ),
-      gap,
+      gapV,
       SpacerSelector(
-        label: 'Камера 1 (между стеклом 1 и 2)',
+        label: 'Камера 1',
         config: _spacer1,
         onChanged: (v) => setState(() => _spacer1 = v),
       ),
-      gap,
+      gapV,
       GlassSelector(
         label: 'Стекло 2 (среднее)',
         selected: _glass2,
         onChanged: (v) => setState(() => _glass2 = v),
       ),
-      gap,
+      gapV,
       SpacerSelector(
-        label: 'Камера 2 (между стеклом 2 и 3)',
+        label: 'Камера 2',
         config: _spacer2,
         onChanged: (v) => setState(() => _spacer2 = v),
       ),
-      gap,
+      gapV,
       GlassSelector(
         label: 'Стекло 3 (внутреннее)',
         selected: _glass3,
