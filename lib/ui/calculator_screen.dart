@@ -3,6 +3,7 @@ import '../models/glass.dart';
 import '../models/glazing_unit.dart';
 import '../models/spacer.dart';
 import '../services/solar_calculator.dart';
+import '../services/sound_calculator.dart';
 import '../services/thermal_calculator.dart';
 import 'widgets/result_tabs_card.dart';
 import 'widgets/spacer_selector.dart';
@@ -31,6 +32,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   // ── Сервисы ───────────────────────────────────────────────────────────────
   final _thermalCalculator = ThermalCalculator();
   final _solarCalculator = SolarCalculator();
+  final _soundCalculator = SoundCalculator();
 
   // ── Построение GlazingUnit из текущего состояния ─────────────────────────
   GlazingUnit _buildUnit() {
@@ -62,12 +64,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     // Солнечный расчёт (только для стеклопакета)
     final solarResult = _solarCalculator.calculateGlazing(unit);
 
+    // Расчёт звукоизоляции
+    final soundResult = _soundCalculator.calculate(unit);
+
     _showResultDialog(
       title: 'Результаты расчёта',
       child: ResultTabsCard(
         formula: formula,
         thermalResult: thermalResult,
         solarResult: solarResult,
+        soundResult: soundResult,
       ),
     );
   }

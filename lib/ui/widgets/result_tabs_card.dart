@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
 import '../../services/solar_calculator.dart';
+import '../../services/sound_calculator.dart';
 import '../../services/thermal_calculator.dart';
 import 'energy_label_card.dart';
 import 'result_card.dart' as thermal;
 import 'solar_result_card.dart' as solar;
+import 'sound_result_card.dart' as sound;
 
-/// Карточка результатов с вкладками "Теплопередача", "Солнечный фактор" и "Этикетка".
+/// Карточка результатов с вкладками "Теплопередача", "Солнечный фактор",
+/// "Шумоизоляция" и "Этикетка".
 ///
-/// Показывает формулу стеклопакета и три таба с результатами расчётов.
+/// Показывает формулу стеклопакета и четыре таба с результатами расчётов.
 class ResultTabsCard extends StatelessWidget {
   final String formula;
   final ThermalResult thermalResult;
   final SolarResult solarResult;
+  final SoundResult soundResult;
 
   const ResultTabsCard({
     super.key,
     required this.formula,
     required this.thermalResult,
     required this.solarResult,
+    required this.soundResult,
   });
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -68,6 +73,10 @@ class ResultTabsCard extends StatelessWidget {
                 text: 'Солнечный фактор',
               ),
               Tab(
+                icon: Icon(Icons.volume_up_outlined),
+                text: 'Шумоизоляция',
+              ),
+              Tab(
                 icon: Icon(Icons.energy_savings_leaf_outlined),
                 text: 'Этикетка',
               ),
@@ -95,6 +104,12 @@ class ResultTabsCard extends StatelessWidget {
                   child: solar.SolarResultCard(
                     formula: formula,
                     result: solarResult,
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: sound.SoundResultCard(
+                    formula: formula,
+                    result: soundResult,
                   ),
                 ),
                 SingleChildScrollView(
